@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 from itertools import cycle
 
 # text files for 5 people points
-text_files = ['AGFollowerFriends.txt', 'EEFollowerFriends.txt', 'HCFollowerFriends.txt',
-              'JFFollowerFriends.txt', 'JPFollowerFriends.txt']
+text_files = ['JPFollowerFriends.txt']
 
 # text_files = ['JPFollowerFriends.txt']
 
@@ -28,10 +27,11 @@ for f in text_files:
     friends = json.loads(friends_txt)
     friends = friends[-100:]
     users = users + friends
+    # sprint(users)
 
 # number users
 num = len(users)
-print(num)
+# print(num)
 # number of clusters expected
 n = 5
 
@@ -45,12 +45,28 @@ for i in range(num):
             for b in list(users[j].values())[0]:
                 if a == b:
                     union = union + 1
-        matrix[i][j] = union/(len(list(users[i].values())[0]) + len(list(users[j].values())[0]))/2
-        # i = j, similarity is 0
+
         if i == j:
+            matrix[i][j] = 0.0
+            continue
+        # there were users with 0 followers, so we're checking this condition
+        notsurewhattonameit = len(list(users[i].values())[0]) + len(list(users[j].values())[0])
+
+        # print("sum {}".format(notsurewhattonameit))
+        if notsurewhattonameit > 0:
+            matrixtempval = union/notsurewhattonameit/2
+            # print(matrixtempval)
+            matrix[i][j] = matrixtempval
+        else:
+            # print(list(users[i].values())[0])
+            # print(users[i])
+            print("Found denominator 0 at ({},{})".format(i,j))
             matrix[i][j] = 0
+        # i = j, similarity is 0
+
 
 # Hierarchical Clustering algorithm
+print(matrix)
 Z = linkage(matrix, 'single', 'correlation')
 plt.figure()
 f1 = fcluster(Z, t=0.1, criterion='maxclust')

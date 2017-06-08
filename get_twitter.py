@@ -7,12 +7,12 @@ with open('keys.json', 'r') as f:
     keys = json.load(f)
 
 # number of keys
-num_keys = len(keys['owner'])
+num_keys = len(keys['ownerID'])
 
 # repeat for all followers
 
 # open text file with followers of Jodi Picoult
-with open('JodiPicoultFollowers.txt', 'r') as f:
+with open('HillaryClintonFollowers.txt', 'r') as f:
     followers = json.load(f)
 
 # file to store friend IDs of Jodi Picoult's followers
@@ -28,7 +28,7 @@ while True:
         consecret = keys['consecret'][i]
         token = keys['token'][i]
         tokensecret = keys['tokensecret'][i]
-        owner = keys['owner'][i]
+        # owner = keys['owner'][i]
         ownerID = keys['ownerID'][i]
 
         consumer = oauth.Consumer(key=conskey, secret=consecret)
@@ -49,7 +49,7 @@ while True:
             f_list = {}
 
             # format = {userID : friends list}
-            if 'ids' in friend_list:
+            if 'ids' in friend_list and len(friend_list['ids']) > 0:
                 f_list[id] = friend_list['ids']
                 file.write(str(f_list))
 
